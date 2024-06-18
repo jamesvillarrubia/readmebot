@@ -1,0 +1,89 @@
+{
+  "name": "<REPLACE_ME>",
+  "version": "0.0.0-releaseit",
+  "description": "",
+  "main": "src",
+  "types": "src/",
+  "directories": {
+    "lib": "dist/src",
+    "bin": "dist/bin"
+  },
+  "scripts": {
+    "mocha": "mocha --config .mocharc.js",
+    "mocha:dev": "mocha --config .mocharc.js --watch",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "build": "rm -rf ./dist; npx tsc; rm -rf ./dist/test; chmod +x ./dist/bin/<REPLACE_ME>.js",
+    "test": "printf '\\33c\\e[3J' && npm run lint; npm run mocha",
+    "test:dev": "echo '\\033c' && npm run lint; npm run mocha:dev",
+    "coverage": "nyc npm test",
+    "release": "release-it --dry-run --ci --config .release-it.js"
+  },
+  "bin": {
+    "<REPLACE_ME>": "dist/bin/<REPLACE_ME>.js"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.24.6",
+    "@eslint/js": "^9.5.0",
+    "@release-it/conventional-changelog": "^8.0.1",
+    "@types/chai": "^4.3.16",
+    "@types/eslint__js": "^8.42.3",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.14.2",
+    "@types/sinon": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "chai": "^4.0.0",
+    "conventional-changelog-angular": "^8.0.0",
+    "eslint": "^8.39.0",
+    "eslint-config-standard": "^17.1.0",
+    "esm": "^3.2.25",
+    "globals": "^15.6.0",
+    "mocha": "^10.4.0",
+    "nock": "^13.5.4",
+    "nyc": "^15.1.0",
+    "prettier": "^2.8.8",
+    "release-it": "^17.3.0",
+    "sinon": "^18.0.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.15.6",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.13.1"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "cosmiconfig": "^9.0.0",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.51.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesvillarrubia/<REPLACE_ME>.git"
+  },
+  "keywords": [
+    "pull requests",
+    "github",
+    "automation",
+    "prs",
+    "ai"
+  ],
+  "author": {
+    "name": "James Villarrubia",
+    "email": "james.villarrubia@gmail.com"
+  },
+  "contributors": [
+    {
+      "name": "James Villarrubia",
+      "email": "james.villarrubia@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jamesvillarrubia/<REPLACE_ME>/issues"
+  },
+  "homepage": "https://github.com/jamesvillarrubia/<REPLACE_ME>#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
