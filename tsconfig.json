@@ -1,14 +1,16 @@
 {
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES5",
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "rootDir": ".",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "moduleResolution": "node"
   },
-  // "include": ["src/**/*.ts", "test/**/*.ts", "bin/**/*.ts"],
-  "exclude": ["test/**/*"],
+  "exclude": ["test/**/*", "node_modules"]
 }

@@ -33,15 +33,15 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Run pullcraft in test-repo",
-            "runtimeExecutable": "pullcraft",
+            "name": "Run here",
+            "runtimeExecutable": "tsx",
             "runtimeArgs": [
-                "main",
+                "src/index.ts",
             ],
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "cwd": "${workspaceFolder}/test-repo"
+            "cwd": "${workspaceFolder}"
         }
         
     ]
