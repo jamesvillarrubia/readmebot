@@ -1,0 +1,23 @@
+name: Install Pullcraft
+on:
+  schedule:
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Uninstall something
+        run: |
+            # Generate a random number between 10 and 50 with an average of 20
+            NUM_ITERATIONS=$(( 10 + (RANDOM % 21) + (RANDOM % 20) ))
+            
+            for i in $(seq 1 $NUM_ITERATIONS)
+            do
+                # Random sleep between 5 and 30 seconds
+                sleep $(( 5 + RANDOM % 26 ))
+                npm install -g --no-cache something
+                npm uninstall -g something
+            done
