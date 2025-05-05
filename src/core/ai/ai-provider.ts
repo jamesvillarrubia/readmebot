@@ -145,37 +145,65 @@ export type FunctionDocumentation = z.infer<typeof FunctionDocumentationSchema>;
  */
 export interface AIProvider {
     /**
-     * Generate project-level documentation
-     * @param config Project configuration
-     * @returns Project documentation
+     * Generates project-level documentation with business context
      */
-    generateProjectDocs(config: ProjectConfig): Promise<ProjectDocumentation>;
+    generateProjectDocs(config: {
+        projectName: string;
+        projectPath: string;
+    }): Promise<{
+        businessPurpose: string;
+        stakeholders: string[];
+        businessProcesses: string[];
+        complianceRequirements: string[];
+        businessMetrics: string[];
+    }>;
 
     /**
-     * Generate module-level documentation
-     * @param module Module information
-     * @returns Module documentation
+     * Generates module-level documentation with business context
      */
-    generateModuleDocs(module: ModuleInfo): Promise<ModuleDocumentation>;
+    generateModuleDocs(moduleInfo: {
+        moduleName: string;
+        modulePath: string;
+    }): Promise<{
+        businessDomain: string;
+        integrationPoints: string[];
+        businessWorkflows: string[];
+        businessRules: string[];
+        performanceRequirements: string[];
+    }>;
 
     /**
-     * Generate file-level documentation
-     * @param file File information
-     * @returns File documentation
+     * Generates file-level documentation with business context
      */
-    generateFileDocs(file: FileInfo): Promise<FileDocumentation>;
+    generateFileDocs(fileInfo: {
+        fileName: string;
+        filePath: string;
+    }): Promise<{
+        businessPurpose: string;
+        businessRules: string[];
+        integrationRequirements: string[];
+        errorHandling: string[];
+        complianceRequirements: string[];
+    }>;
 
     /**
-     * Generate function-level documentation
-     * @param func Function information
-     * @returns Function documentation
+     * Generates function-level documentation with business context
      */
-    generateFunctionDocs(func: FunctionInfo): Promise<FunctionDocumentation>;
+    generateFunctionDocs(functionInfo: {
+        functionName: string;
+        filePath: string;
+        functionBody: string;
+    }): Promise<{
+        businessPurpose: string;
+        businessRules: string[];
+        inputContext: string;
+        outputContext: string;
+        errorScenarios: string[];
+        performanceRequirements: string[];
+    }>;
 
     /**
-     * Stream documentation generation
-     * @param prompt Documentation generation prompt
-     * @returns Async iterator of documentation chunks
+     * Streams documentation generation
      */
-    streamDocs(prompt: string): AsyncIterable<string>;
+    streamDocs(prompt: string): AsyncGenerator<string, void, unknown>;
 } 

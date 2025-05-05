@@ -6,6 +6,7 @@ import { aiOperations } from '../src/generator/aiOperations.js';
 // Mock dependencies
 vi.mock('../src/generator/fileOperations.js', () => ({
   fileOperations: {
+    getFileEnding: vi.fn().mockImplementation((path: string) => path.slice(path.lastIndexOf('.'))),
     getProjectFiles: vi.fn(),
     readFile: vi.fn(),
     writeFile: vi.fn(),
@@ -26,15 +27,39 @@ vi.mock('../src/generator/aiOperations.js', () => ({
   },
 }));
 
+vi.mock('openai', () => ({
+  OpenAI: vi.fn().mockImplementation(() => ({
+    chat: {
+      completions: {
+        create: vi.fn().mockResolvedValue({
+          choices: [{ message: { content: 'Mock summary' } }],
+        }),
+      },
+    },
+  })),
+}));
+
 describe('Summary Manager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock package.json content
+    vi.mocked(fileOperations.readFile).mockImplementation(async (path: string) => {
+      if (path === 'package.json') {
+        return JSON.stringify({
+          name: 'test-project',
+          version: '1.0.0',
+          dependencies: {
+            'test-dependency': '^1.0.0'
+          }
+        });
+      }
+      return 'test content';
+    });
   });
 
   it('should generate summaries for all files', async () => {
     // Mock file operations
     vi.mocked(fileOperations.getProjectFiles).mockResolvedValue(['test.ts']);
-    vi.mocked(fileOperations.readFile).mockResolvedValue('test content');
     vi.mocked(fileOperations.getComponents).mockReturnValue(['header', 'footer', 'prefix']);
     vi.mocked(fileOperations.regexExtractSummary).mockReturnValue('test summary');
     vi.mocked(fileOperations.getExistingSummaries).mockResolvedValue({});
@@ -61,7 +86,6 @@ describe('Summary Manager', () => {
   it('should respect force option', async () => {
     // Mock file operations
     vi.mocked(fileOperations.getProjectFiles).mockResolvedValue(['test.ts']);
-    vi.mocked(fileOperations.readFile).mockResolvedValue('test content');
     vi.mocked(fileOperations.getComponents).mockReturnValue(['header', 'footer', 'prefix']);
     vi.mocked(fileOperations.regexExtractSummary).mockReturnValue('test summary');
     vi.mocked(fileOperations.getExistingSummaries).mockResolvedValue({ 'test.ts': { summary: 'existing summary' } });

@@ -48,9 +48,11 @@ const defaultConfig: Config = {
 };
 
 // OpenAI client setup
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+export const getOpenAIClient = (): OpenAI => {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY || '',
+  });
+};
 
 /**
  * Creates the storage directory if it doesn't exist
@@ -86,7 +88,7 @@ const summarizeFile = async (
   if (summary && exclude) {
     logger.info(
       `${filePath}:`.padEnd(config.padWidth || 60) +
-        'Skipped. Summary exists in storage. Filetype excluded.'
+      'Skipped. Summary exists in storage. Filetype excluded.'
     );
     return { name: filePath, summary };
   }
@@ -163,6 +165,7 @@ const summarizeToolsAndFrameworks = async (config: Config): Promise<FileSummary[
   const packageJson = JSON.parse(await fileOperations.readFile('package.json', 'utf8'));
   const dependencies = Object.keys(packageJson.dependencies || {});
 
+  const openai = getOpenAIClient();
   const summaries = await Promise.all(
     dependencies.map(async (tool: string) => {
       if (!existingSummaries[tool] || config.force) {

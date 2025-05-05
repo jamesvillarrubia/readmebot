@@ -2,9 +2,9 @@
 import { OpenAI } from 'openai';
 import { z } from 'zod';
 import { pino } from 'pino';
-import { summaryPrompt } from  '../prompts.template.js';
+import { summaryPrompt } from '../prompts.template.js';
 import { readmeSystemPrompt, readmeTemplate } from '../readme.template.js';
-import FileOperations from './fileOperations.js';
+import { fileOperations } from './fileOperations.js';
 
 // Type definitions
 const FileSummarySchema = z.object({
@@ -26,30 +26,28 @@ const logger = pino({
 });
 
 // OpenAI client setup
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+export const getOpenAIClient = (): OpenAI => {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY || '',
+  });
+};
 
 export class AIOperations {
   private apiKey: string;
   private openai: OpenAI;
-  private fileOps: FileOperations;
 
-  constructor () {
-    if(process.env.OPENAI_API_KEY === undefined) {
+  constructor() {
+    if (process.env.OPENAI_API_KEY === undefined) {
       throw new Error('Missing OpenAI API Key');
     }
     this.apiKey = process.env.OPENAI_API_KEY;
-    this.openai = new OpenAI({
-      apiKey: this.apiKey
-    })
-    this.fileOps = new FileOperations();
+    this.openai = getOpenAIClient();
   }
 
   /**
    * Gets a summary of a file using AI
    */
-  public async getSummaryFromAI (filePath: string, contentToSummarize: string): Promise<string> {
+  public async getSummaryFromAI(filePath: string, contentToSummarize: string): Promise<string> {
     try {
       const response = await this.openai.chat.completions.create({
         model: 'gpt-4-turbo',
@@ -66,7 +64,8 @@ export class AIOperations {
         max_tokens: 150,
       });
 
-      return response.choices[0].message?.content?.trim() || 'No summary available.';
+      const content = response.choices[0]?.message?.content;
+      return content?.trim() || 'No summary available.';
     } catch (error) {
       logger.error(`Error getting AI summary for ${filePath}:`, error);
       return 'Error generating summary.';
@@ -76,8 +75,8 @@ export class AIOperations {
   /**
    * Updates markdown documents with summaries
    */
-  public async updateMarkdownDocuments (summaries: any, toolsSummaries: any): Promise<string> {
-    const packageJson = await this.fileOps.readFile('package.json', 'utf8');
+  public async updateMarkdownDocuments(summaries: any, toolsSummaries: any): Promise<string> {
+    const packageJson = await fileOperations.readFile('package.json');
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4-turbo',
       messages: [
@@ -97,13 +96,17 @@ export class AIOperations {
       max_tokens: 1000,
     });
 
-    const readmeContent = response.choices[0].message?.content?.trim() || '';
+    const content = response.choices[0]?.message?.content;
+    const readmeContent = content?.trim() || '';
     if (readmeContent) {
-      await this.fileOps.writeFile('autoREADME.md', readmeContent, 'utf8');
+      await fileOperations.writeFile('autoREADME.md', readmeContent);
       logger.info('README content generated successfully.');
     }
     return readmeContent;
   }
 }
+
+// Create and export a singleton instance
+export const aiOperations = new AIOperations();
 
 export default AIOperations;
