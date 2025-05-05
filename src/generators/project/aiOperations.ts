@@ -1,18 +1,7 @@
 // import axios from 'axios';
 import { OpenAI } from 'openai';
-import { z } from 'zod';
 import { logger } from '../../utils/logger.js';
-import { summaryPrompt } from '../../templates/prompts.template.js';
-import { readmeSystemPrompt, readmeTemplate } from '../../templates/readme.template.js';
 import { fileOperations } from './fileOperations.js';
-
-// Type definitions
-const FileSummarySchema = z.object({
-  name: z.string(),
-  summary: z.string(),
-});
-
-type FileSummary = z.infer<typeof FileSummarySchema>;
 
 // OpenAI client setup
 export const getOpenAIClient = (): OpenAI => {
@@ -22,14 +11,12 @@ export const getOpenAIClient = (): OpenAI => {
 };
 
 export class AIOperations {
-  private apiKey: string;
   private openai: OpenAI;
 
   constructor() {
     if (process.env.OPENAI_API_KEY === undefined) {
       throw new Error('Missing OpenAI API Key');
     }
-    this.apiKey = process.env.OPENAI_API_KEY;
     this.openai = getOpenAIClient();
   }
 

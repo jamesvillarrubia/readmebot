@@ -56,7 +56,7 @@ const ensureStorageDirectory = async (storagePath: string): Promise<void> => {
 const summarizeFile = async (
   filePath: string,
   config: Config
-): Promise<FileSummary | undefined> => {
+): Promise<FileSummary> => {
   const allowedExtensions = ['.ts', '.js', '.json', '.tsx', '.jsx', '.yaml', '.yml', '.sh'];
   const embedExclusions = ['.json'];
   const fileExtension = fileOperations.getFileEnding(filePath);
@@ -85,7 +85,7 @@ const summarizeFile = async (
   const [header, footer, prefix] = fileOperations.getComponents(filePath);
 
   if (header && footer && prefix && fileContent.includes(header) && fileContent.includes(footer) && !config.force) {
-    summary = fileOperations.regexExtractSummary(filePath, fileContent, header, footer, prefix);
+    summary = fileOperations.regexExtractSummary(fileContent, header, footer, prefix);
     logger.info(
       `${filePath}:`.padEnd(config.padWidth || 60) + 'Skipped. Summary exists in file. Updating Storage.'
     );
@@ -125,6 +125,9 @@ const summarizeFile = async (
     }
     return { name: filePath, summary };
   }
+
+  // If we somehow get here, return a default summary
+  return { name: filePath, summary: 'No summary available.' };
 };
 
 /**

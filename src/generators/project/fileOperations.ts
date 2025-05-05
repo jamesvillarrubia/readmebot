@@ -64,7 +64,6 @@ export const getComponents = (filePath: string): [string, string, string] => {
  * Extracts a summary from a file using regex
  */
 export const regexExtractSummary = (
-  filePath: string,
   content: string,
   header: string,
   footer: string,
@@ -139,11 +138,11 @@ export const compileSummaries = async (
  * Removes short file summaries
  */
 export const removeShortFileSummaries = async (filePath: string): Promise<void> => {
-  const [header, footer] = getComponents(filePath);
+  const [header, footer, prefix] = getComponents(filePath);
   if (!header || !footer) return;
 
   const content = await readFileContent(filePath);
-  const summary = regexExtractSummary(filePath, content, header, footer, '');
+  const summary = regexExtractSummary(content, header, footer, prefix);
   if (summary.length < 10) {
     const newContent = removeSummaryFromFileContent(content, header, footer);
     await writeFileContent(filePath, newContent);

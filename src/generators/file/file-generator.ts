@@ -1,5 +1,4 @@
 import fs from 'fs/promises';
-import path from 'path';
 import ts from 'typescript';
 import { AIProvider } from '../../core/ai/ai-provider.js';
 import {
@@ -274,20 +273,21 @@ export class FileGenerator implements IFileGenerator {
     }
 
     /**
-     * Extract @throws information from JSDoc comments
+     * Extract throws information from JSDoc comments
      */
     private extractThrowsFromComments(node: ts.Node, sourceFile: ts.SourceFile): Array<{ type: string; description: string }> {
-        const fullText = node.getFullText();
-        const throwsMatches = fullText.matchAll(/@throws\s+(\w+)\s+(.*?)(?=\*\/|\n\s*\*)/g);
         const throws: Array<{ type: string; description: string }> = [];
+        const fullText = sourceFile.getFullText();
+        const nodeStart = node.getFullStart();
+        const commentRanges = ts.getLeadingCommentRanges(fullText, nodeStart) || [];
 
-        for (const match of throwsMatches) {
-            const type = match[1];
-            const description = match[2]?.trim() || 'No description available';
-            if (type) {
+        for (const commentRange of commentRanges) {
+            const comment = fullText.slice(commentRange.pos, commentRange.end);
+            const throwsMatch = comment.match(/@throws\s+{([^}]+)}\s+(.+)/);
+            if (throwsMatch && throwsMatch[1] && throwsMatch[2]) {
                 throws.push({
-                    type,
-                    description
+                    type: throwsMatch[1].trim(),
+                    description: throwsMatch[2].trim()
                 });
             }
         }

@@ -34,12 +34,12 @@ export class MockAIProvider implements AIProvider {
     }
 
     async generateSummary(content: string, options: SummaryOptions): Promise<Summary> {
-        const response = this.responses.get(content) || 'Mock summary for: ' + content;
+        const response = this.responses.get(content) || `Mock summary for: ${content} (maxTokens: ${options.maxTokens || 'default'}, temperature: ${options.temperature || 'default'})`;
         return {
             content: response,
             metadata: {
                 tokens: response.length,
-                model: 'mock-model',
+                model: this.models[0] || 'mock-model',
             },
         };
     }

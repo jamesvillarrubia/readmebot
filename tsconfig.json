@@ -14,7 +14,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node", "vitest/globals"],
+    "types": ["node"],
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "sourceMap": true,
@@ -37,6 +37,6 @@
     "allowUnusedLabels": false,
     "allowUnreachableCode": false
   },
-  "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules", "dist", "test/fixtures/**/*"]
+  "include": ["src/**/*", "bin/**/*"],
+  "exclude": ["node_modules", "dist", "test/**/*"]
 }

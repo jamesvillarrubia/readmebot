@@ -3,7 +3,6 @@
  * @module generators/function
  */
 
-import fs from 'fs/promises';
 import ts from 'typescript';
 import { AIProvider } from '../../core/ai/ai-provider.js';
 import {
@@ -165,7 +164,8 @@ export class FunctionGenerator implements IFunctionGenerator {
 
         // Handle union types
         if (type.includes('|')) {
-            return type.split('|')[0].trim();
+            const types = type.split('|');
+            return types[0]?.trim() || 'unknown';
         }
 
         return type;

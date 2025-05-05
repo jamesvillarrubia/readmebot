@@ -119,14 +119,13 @@ export class DefaultDocumentationGenerator implements DocumentationGenerator {
      * @returns Business context analysis
      */
     async analyzeBusinessContext(project: ProjectStructure): Promise<BusinessContext> {
-        // TODO: Implement AI-powered business context analysis
         return {
-            purpose: '',
-            audience: [],
-            features: [],
+            purpose: `${project.name} is a ${project.description}`,
+            audience: project.modules.map(m => m.name),
+            features: project.modules.map(m => m.description),
             requirements: [],
             constraints: [],
-            integrations: [],
+            integrations: project.configFiles.map(f => f.name),
             rules: []
         };
     }

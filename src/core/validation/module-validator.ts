@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ModuleDocumentation, ModuleDocumentationSchema } from '../generators/module-generator.js';
+import { ModuleDocumentation, ModuleDocumentationSchema } from '../ai/ai-provider.js';
 import { AIProvider } from '../ai/ai-provider.js';
 
 /**
@@ -35,34 +35,29 @@ export class ModuleValidator {
             }
         }
 
-        // Business context validation
-        if (!docs.businessContext.domain) {
-            errors.push('Business context must include domain');
-        }
-        if (!docs.businessContext.purpose) {
-            errors.push('Business context must include purpose');
-        }
-        if (docs.businessContext.stakeholders.length === 0) {
-            warnings.push('No stakeholders defined in business context');
+        // Business domain validation
+        if (!docs.businessDomain) {
+            errors.push('Business domain must be specified');
         }
 
-        // Architecture validation
-        if (docs.architecture.components.length === 0) {
-            warnings.push('No components defined in architecture');
-        }
-        if (docs.architecture.patterns.length === 0) {
-            warnings.push('No patterns detected in architecture');
+        // Integration points validation
+        if (docs.integrationPoints.length === 0) {
+            warnings.push('No integration points defined');
         }
 
-        // API validation
-        if (docs.api.exports.length === 0) {
-            warnings.push('No exports defined in API');
+        // Business workflows validation
+        if (docs.businessWorkflows.length === 0) {
+            warnings.push('No business workflows defined');
         }
 
-        // Dependency validation
-        const externalDeps = docs.dependencies.filter(d => d.type === 'external');
-        if (externalDeps.length === 0) {
-            warnings.push('No external dependencies detected');
+        // Business rules validation
+        if (docs.businessRules.length === 0) {
+            warnings.push('No business rules defined');
+        }
+
+        // Performance requirements validation
+        if (docs.performanceRequirements.length === 0) {
+            warnings.push('No performance requirements defined');
         }
 
         // AI-assisted validation
@@ -89,31 +84,34 @@ export class ModuleValidator {
         const warnings: string[] = [];
 
         // Check for missing sections
-        if (!docs.businessContext) {
-            errors.push('Missing business context section');
+        if (!docs.businessDomain) {
+            errors.push('Missing business domain');
         }
-        if (!docs.architecture) {
-            errors.push('Missing architecture section');
+        if (!docs.integrationPoints) {
+            errors.push('Missing integration points section');
         }
-        if (!docs.api) {
-            errors.push('Missing API section');
+        if (!docs.businessWorkflows) {
+            errors.push('Missing business workflows section');
         }
-        if (!docs.dependencies) {
-            errors.push('Missing dependencies section');
+        if (!docs.businessRules) {
+            errors.push('Missing business rules section');
+        }
+        if (!docs.performanceRequirements) {
+            errors.push('Missing performance requirements section');
         }
 
         // Check for empty sections
-        if (docs.businessContext && Object.keys(docs.businessContext).length === 0) {
-            warnings.push('Business context section is empty');
+        if (docs.integrationPoints.length === 0) {
+            warnings.push('Integration points section is empty');
         }
-        if (docs.architecture && Object.keys(docs.architecture).length === 0) {
-            warnings.push('Architecture section is empty');
+        if (docs.businessWorkflows.length === 0) {
+            warnings.push('Business workflows section is empty');
         }
-        if (docs.api && Object.keys(docs.api).length === 0) {
-            warnings.push('API section is empty');
+        if (docs.businessRules.length === 0) {
+            warnings.push('Business rules section is empty');
         }
-        if (docs.dependencies && docs.dependencies.length === 0) {
-            warnings.push('Dependencies section is empty');
+        if (docs.performanceRequirements.length === 0) {
+            warnings.push('Performance requirements section is empty');
         }
 
         // AI-assisted completeness check

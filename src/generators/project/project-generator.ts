@@ -184,19 +184,24 @@ export class ProjectGenerator implements IProjectGenerator {
      * Infer the purpose of a component based on its name and contents
      */
     private async inferComponentPurpose(name: string, files: string[]): Promise<string> {
+        // Check for specific files that indicate component purpose
+        const hasTests = files.some(f => f.includes('.test.') || f.includes('.spec.'));
+        const hasTypes = files.some(f => f.includes('.d.ts'));
+        const hasIndex = files.includes('index.ts') || files.includes('index.js');
+
         switch (name) {
             case 'core':
-                return 'Core interfaces and types for the application';
+                return `Core interfaces and types for the application${hasTypes ? ' with TypeScript definitions' : ''}`;
             case 'providers':
-                return 'Implementation of core interfaces';
+                return `Implementation of core interfaces${hasTests ? ' with test coverage' : ''}`;
             case 'generators':
-                return 'Documentation generation components';
+                return `Documentation generation components${hasTests ? ' with test coverage' : ''}`;
             case 'utils':
-                return 'Shared utility functions';
+                return `Shared utility functions${hasIndex ? ' with centralized exports' : ''}`;
             case 'templates':
                 return 'Documentation templates';
             default:
-                return `${name} component`;
+                return `${name} component${hasTests ? ' with test coverage' : ''}${hasTypes ? ' and type definitions' : ''}`;
         }
     }
 
@@ -341,18 +346,86 @@ export class ProjectGenerator implements IProjectGenerator {
         purpose: string;
         implementation: string;
     }>> {
-        return [
-            {
-                name: 'Provider Pattern',
-                purpose: 'Abstracts external service integration through interfaces',
-                implementation: 'AIProvider interface with concrete implementations'
-            },
-            {
-                name: 'Generator Pattern',
-                purpose: 'Generates documentation at different levels of abstraction',
-                implementation: 'ProjectGenerator, ModuleGenerator, etc.'
-            }
-        ];
+        const patterns: Array<{
+            name: string;
+            purpose: string;
+            implementation: string;
+        }> = [];
+
+        // Check for Factory pattern
+        if (await this.hasFactoryPattern(config.projectPath)) {
+            patterns.push({
+                name: 'Factory Pattern',
+                purpose: 'Create objects without exposing creation logic',
+                implementation: 'Used in generator creation'
+            });
+        }
+
+        // Check for Strategy pattern
+        if (await this.hasStrategyPattern(config.projectPath)) {
+            patterns.push({
+                name: 'Strategy Pattern',
+                purpose: 'Define family of algorithms and make them interchangeable',
+                implementation: 'Used in documentation generation strategies'
+            });
+        }
+
+        // Check for Observer pattern
+        if (await this.hasObserverPattern(config.projectPath)) {
+            patterns.push({
+                name: 'Observer Pattern',
+                purpose: 'Define one-to-many dependency between objects',
+                implementation: 'Used in documentation update notifications'
+            });
+        }
+
+        return patterns;
+    }
+
+    /**
+     * Check if project uses Factory pattern
+     */
+    private async hasFactoryPattern(projectPath: string): Promise<boolean> {
+        try {
+            const files = await fs.readdir(path.join(projectPath, 'src'), { recursive: true });
+            return files.some(file =>
+                file.toLowerCase().includes('factory') ||
+                file.toLowerCase().includes('provider')
+            );
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Check if project uses Strategy pattern
+     */
+    private async hasStrategyPattern(projectPath: string): Promise<boolean> {
+        try {
+            const files = await fs.readdir(path.join(projectPath, 'src'), { recursive: true });
+            return files.some(file =>
+                file.toLowerCase().includes('strategy') ||
+                file.toLowerCase().includes('provider')
+            );
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Check if project uses Observer pattern
+     */
+    private async hasObserverPattern(projectPath: string): Promise<boolean> {
+        try {
+            const files = await fs.readdir(path.join(projectPath, 'src'), { recursive: true });
+            return files.some(file =>
+                file.toLowerCase().includes('observer') ||
+                file.toLowerCase().includes('listener') ||
+                file.toLowerCase().includes('event')
+            );
+        } catch {
+            return false;
+        }
     }
 
     /**

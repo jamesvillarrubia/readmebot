@@ -14,15 +14,48 @@
 *** END-SUMMARY **/
 
 import { Command } from 'commander';
-import Generator from '../trash/generator.js';
+import { ProjectGenerator } from '../src/generators/project/project-generator.js';
+import { OpenAIProvider } from '../src/providers/ai/openai-provider.js';
+import path from 'path';
 
 const program = new Command();
 
 program
   .version('1.0.0')
-  .action(() => {
-    const generator = new Generator();
-    generator.run();
+  .option('-p, --path <path>', 'Path to the project', process.cwd())
+  .option('-n, --name <name>', 'Project name', path.basename(process.cwd()))
+  .option('-k, --api-key <key>', 'OpenAI API key', process.env.OPENAI_API_KEY)
+  .action(async (options) => {
+    if (!options.apiKey) {
+      console.error('Error: OpenAI API key is required. Set OPENAI_API_KEY environment variable or use --api-key option.');
+      process.exit(1);
+    }
+
+    console.log('Generating documentation for project:', options.name);
+    console.log('Project path:', options.path);
+    console.log('Using OpenAI API key:', options.apiKey.slice(0, 10) + '...');
+
+    const aiProvider = new OpenAIProvider({
+      apiKey: options.apiKey
+    });
+    const generator = new ProjectGenerator(aiProvider);
+    const config = {
+      projectName: options.name,
+      projectPath: options.path
+    };
+
+    try {
+      const docs = await generator.generateDocumentation(config);
+      console.log('\nGenerated Documentation:');
+      console.log('=====================');
+      console.log('\nBusiness Context:');
+      console.log(JSON.stringify(docs.businessContext, null, 2));
+      console.log('\nTechnical Context:');
+      console.log(JSON.stringify(docs.technicalContext, null, 2));
+    } catch (error) {
+      console.error('Error generating documentation:', error);
+      process.exit(1);
+    }
   });
 
 program.parse(process.argv);

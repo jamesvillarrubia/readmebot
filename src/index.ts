@@ -12,7 +12,7 @@
 *** END-SUMMARY **/
 
 import { Command } from 'commander';
-import { runSummaryGeneration } from './generators/summaryManager.js';
+import { runSummaryGeneration } from './generators/project/summaryManager.js';
 import { logger } from './utils/logger.js';
 
 const program = new Command();
