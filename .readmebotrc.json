@@ -1,0 +1,22 @@
+{
+  "template": "default",
+  "output": "README.md",
+  "include": ["src/**/*", "lib/**/*"],
+  "exclude": ["node_modules", "dist"],
+  "ai": {
+    "provider": "openai",
+    "model": "gpt-4-turbo-preview",
+    "temperature": 0.7,
+    "maxTokens": 1000
+  },
+  "formatting": {
+    "minPrependLines": 10,
+    "padWidth": 60,
+    "prepend": true
+  },
+  "storage": {
+    "path": "./.autosummary",
+    "summaryFileName": "summary",
+    "toolsSummaryFileName": "toolsSummary"
+  }
+} 

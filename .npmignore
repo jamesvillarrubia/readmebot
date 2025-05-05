@@ -1,0 +1,40 @@
+# Source files
+src/
+test/
+*.test.ts
+*.spec.ts
+
+# Configuration files
+.env*
+.gitignore
+.npmignore
+.prettierrc
+.eslintrc.json
+tsconfig.json
+vitest.config.ts
+.release-it.js
+.mocharc.js
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Development tools
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Generated files
+.autosummary/
+*.summary.json
+autoREADME.md
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Misc
+.DS_Store
+*.log 

@@ -1,15 +1,15 @@
 /** AUTO-SUMMARY **
-   Purpose: This file serves as a command-line interface (CLI) for the project, allowing users to execute the generator functionality from the terminal.
+   Purpose: This file is designed to test the `Greeter` class functionality within the project using Mocha and Chai for unit testing.
 
    Key Components:
-   - `Command`: Imported from the 'commander' package to handle CLI commands and options.
-   - `Generator`: Imported from the local module to handle the generation process.
+   - `Greeter`: Class from the project that generates greeting messages.
+   - Testing libraries: Uses `chai` for assertions, `mocha` for structuring tests, `sinon` for spies, and `nock` for mocking HTTP requests.
 
-   Functional Overview: The file sets up a CLI tool using the 'commander' package, defines the version of the tool, and specifies an action that initializes and runs the `Generator` when the CLI command is executed.
+   Functional Overview: The file includes tests to ensure the `Greeter` class correctly returns a greeting message, verifies that the `greet` method is called the correct number of times, and includes a setup for testing HTTP requests (commented out).
 
-   Dependencies and Integrations: Depends on the 'commander' package for CLI functionality and the `Generator` class from the local project to perform the generation tasks.
+   Dependencies and Integrations: Relies on the `Greeter` class from the project. It uses `chai`, `mocha`, `sinon`, and `nock` for testing functionalities, which are essential for running the tests and ensuring the reliability of the `Greeter` class methods.
 
-   Additional Context: This CLI setup is typically used to provide a user-friendly way to interact with the functionalities of the project directly from the command line, enhancing usability and accessibility.
+   Additional Context: This test suite is crucial for maintaining the reliability of the `Greeter` class as the project evolves, ensuring that changes do not break existing functionality.
 *** END-SUMMARY **/
 
 import { expect } from 'chai';
