@@ -1,7 +1,7 @@
 import { ensureDir } from 'fs-extra';
 import { OpenAI } from 'openai';
-import { pino } from 'pino';
 import { z } from 'zod';
+import { logger } from '../../utils/logger.js';
 import { fileOperations } from './fileOperations.js';
 import { aiOperations } from './aiOperations.js';
 
@@ -24,17 +24,6 @@ const FileSummarySchema = z.object({
 });
 
 type FileSummary = z.infer<typeof FileSummarySchema>;
-
-// Logger setup
-const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-      translateTime: 'SYS:standard',
-    },
-  },
-});
 
 // Default configuration
 const defaultConfig: Config = {
@@ -184,9 +173,10 @@ const summarizeToolsAndFrameworks = async (config: Config): Promise<FileSummary[
           max_tokens: 50,
         });
 
-        return { name: tool, summary: response.choices[0].message?.content?.trim() || '' };
+        const content = response.choices[0]?.message?.content;
+        return { name: tool, summary: content?.trim() || 'No summary available.' };
       }
-      return { name: tool, summary: existingSummaries[tool] };
+      return { name: tool, summary: existingSummaries[tool]?.summary || 'No summary available.' };
     })
   );
 

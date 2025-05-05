@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AIProvider } from '../../../src/core/ai/ai-provider.js';
-import { MockAIProvider } from '../../../src/providers/ai/mock-ai-provider.js';
+import { MockAIProvider } from '../../mocks/providers/ai/mock-ai-provider.js';
 
 describe('AIProvider', () => {
     let provider: AIProvider;

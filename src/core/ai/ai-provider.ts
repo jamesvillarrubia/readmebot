@@ -206,4 +206,20 @@ export interface AIProvider {
      * Streams documentation generation
      */
     streamDocs(prompt: string): AsyncGenerator<string, void, unknown>;
+
+    /**
+     * Validates module documentation using AI
+     */
+    validateModuleDocs(docs: ModuleDocumentation): Promise<{
+        errors: string[];
+        warnings: string[];
+    }>;
+
+    /**
+     * Verifies module documentation completeness using AI
+     */
+    verifyModuleDocsCompleteness(docs: ModuleDocumentation): Promise<{
+        errors: string[];
+        warnings: string[];
+    }>;
 } 

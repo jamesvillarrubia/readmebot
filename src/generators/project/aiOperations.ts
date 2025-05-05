@@ -1,9 +1,9 @@
 // import axios from 'axios';
 import { OpenAI } from 'openai';
 import { z } from 'zod';
-import { pino } from 'pino';
-import { summaryPrompt } from '../prompts.template.js';
-import { readmeSystemPrompt, readmeTemplate } from '../readme.template.js';
+import { logger } from '../../utils/logger.js';
+import { summaryPrompt } from '../../templates/prompts.template.js';
+import { readmeSystemPrompt, readmeTemplate } from '../../templates/readme.template.js';
 import { fileOperations } from './fileOperations.js';
 
 // Type definitions
@@ -13,17 +13,6 @@ const FileSummarySchema = z.object({
 });
 
 type FileSummary = z.infer<typeof FileSummarySchema>;
-
-// Logger setup
-const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-      translateTime: 'SYS:standard',
-    },
-  },
-});
 
 // OpenAI client setup
 export const getOpenAIClient = (): OpenAI => {

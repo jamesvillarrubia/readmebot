@@ -12,19 +12,8 @@
 *** END-SUMMARY **/
 
 import { Command } from 'commander';
-import { runSummaryGeneration } from './generator/summaryManager.js';
-import { pino } from 'pino';
-
-// Logger setup
-const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-      translateTime: 'SYS:standard',
-    },
-  },
-});
+import { runSummaryGeneration } from './generators/summaryManager.js';
+import { logger } from './utils/logger.js';
 
 const program = new Command();
 

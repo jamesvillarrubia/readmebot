@@ -1,5 +1,5 @@
 {
-  // "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
@@ -12,10 +12,10 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "@/*": ["./src/*"]
     },
     "types": ["node", "vitest/globals"],
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "sourceMap": true,
     "removeComments": false,

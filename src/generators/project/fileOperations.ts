@@ -1,7 +1,7 @@
 import { readFile, writeFile, ensureDir, pathExists } from 'fs-extra';
 import { globby } from 'globby';
 import { z } from 'zod';
-import { log } from '../logger.js';
+import { logger } from '../../utils/logger.js';
 
 // Type definitions
 const FileSummarySchema = z.object({
@@ -72,7 +72,7 @@ export const regexExtractSummary = (
 ): string => {
   const regex = new RegExp(`${header}\\n([\\s\\S]*?)${footer}`);
   const match = content.match(regex);
-  if (!match) return '';
+  if (!match || !match[1]) return '';
 
   return match[1]
     .split('\n')
@@ -147,7 +147,7 @@ export const removeShortFileSummaries = async (filePath: string): Promise<void> 
   if (summary.length < 10) {
     const newContent = removeSummaryFromFileContent(content, header, footer);
     await writeFileContent(filePath, newContent);
-    log(`${filePath}:`.padEnd(60) + 'Summary removed. File too short.');
+    logger.info(`${filePath}:`.padEnd(60) + 'Summary removed. File too short.');
   }
 };
 

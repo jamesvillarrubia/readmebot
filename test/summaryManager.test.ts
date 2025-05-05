@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { runSummaryGeneration } from '../src/generator/summaryManager.js';
-import { fileOperations } from '../src/generator/fileOperations.js';
-import { aiOperations } from '../src/generator/aiOperations.js';
+import { runSummaryGeneration } from '../src/generators/project/summaryManager.js';
+import { fileOperations } from '../src/generators/project/fileOperations.js';
+import { aiOperations } from '../src/generators/project/aiOperations.js';
 
 // Mock dependencies
-vi.mock('../src/generator/fileOperations.js', () => ({
+vi.mock('../src/generators/project/fileOperations.js', () => ({
   fileOperations: {
     getFileEnding: vi.fn().mockImplementation((path: string) => path.slice(path.lastIndexOf('.'))),
     getProjectFiles: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock('../src/generator/fileOperations.js', () => ({
   },
 }));
 
-vi.mock('../src/generator/aiOperations.js', () => ({
+vi.mock('../src/generators/project/aiOperations.js', () => ({
   aiOperations: {
     getSummaryFromAI: vi.fn(),
     updateMarkdownDocuments: vi.fn(),

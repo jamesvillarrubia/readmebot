@@ -228,6 +228,111 @@ You can create custom templates for each documentation level. See the [Templates
  */
 ```
 
+## Function-Level Documentation Generator
+
+The function-level documentation generator analyzes TypeScript functions and generates comprehensive documentation including:
+
+- Function description and purpose
+- Parameter documentation with types and descriptions
+- Return type documentation
+- Error handling documentation
+- Business context and rules
+- Dependencies and relationships
+- Code examples and test cases
+
+### Usage
+
+```typescript
+import { FunctionGenerator } from './generators/function';
+import { AIProvider } from './core/ai/ai-provider';
+
+// Create an AI provider instance
+const aiProvider = new AIProvider({
+  // Configure your AI provider
+});
+
+// Create a function generator instance
+const generator = new FunctionGenerator(aiProvider);
+
+// Generate documentation for a function
+const docs = await generator.generateDocumentation({
+  functionName: 'myFunction',
+  filePath: 'path/to/file.ts',
+  functionBody: '// function source code',
+});
+```
+
+### Documentation Structure
+
+The generated documentation includes:
+
+```typescript
+interface FunctionDocumentation {
+  // Basic information
+  name: string;
+  description: string;
+
+  // Parameters
+  parameters: Array<{
+    name: string;
+    type: string;
+    description: string;
+    isOptional: boolean;
+    defaultValue?: string;
+  }>;
+
+  // Return type
+  returns: {
+    type: string;
+    description: string;
+  };
+
+  // Error handling
+  errors: Array<{
+    type: string;
+    description: string;
+    handling: string;
+  }>;
+
+  // Business context
+  businessContext: {
+    purpose: string;
+    rules: string[];
+    inputContext: string;
+    outputContext: string;
+    performanceRequirements: string[];
+  };
+
+  // Dependencies
+  dependencies: Array<{
+    name: string;
+    type: string;
+    purpose: string;
+  }>;
+
+  // Examples and tests
+  examples: string[];
+  testCases: string[];
+}
+```
+
+### Features
+
+- **TypeScript Support**: Full support for TypeScript type information and JSDoc comments
+- **Business Context**: AI-powered analysis of business rules and requirements
+- **Dependency Analysis**: Automatic detection of function dependencies
+- **Example Generation**: Automatic generation of usage examples
+- **Test Case Generation**: Generation of test cases for the function
+- **Error Documentation**: Comprehensive documentation of error scenarios and handling
+
+### Integration
+
+The function-level documentation generator integrates with:
+
+- TypeScript Compiler API for accurate code analysis
+- AI providers for business context generation
+- Project documentation system for consistent documentation
+
 ## License
 
 MIT
